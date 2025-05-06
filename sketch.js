@@ -7,34 +7,41 @@ let isCapturing = false;
 let captureFrames = 120;
 let frameCountForGif = 0;
 
-// UI Elements
 let rSlider, angleStepSlider, speedSlider, sizeSlider;
 let fillPicker, strokePicker, strokeWeightSlider, strokeToggle;
 let bgPicker, xOffsetSlider, yOffsetSlider, phaseSlider;
 let textInput, saveButton, gifButton;
+let xAmpSlider, xAngleStepSlider;
 let durationSelect;
 let loadingMessage;
+let hasWarnedPhase = false;
 
 function preload() {
   font = loadFont("fonts/Pacifico-Regular.ttf");
 }
 
 function setup() {
-  cnv = createCanvas(600, 400);
+  cnv = createCanvas(800, 400);
+  cnv.parent('canvas-container');
+
+  let topUIContainer = select('#top-ui-container');
+  let uiContainer = select('#ui-container');
+
   angleMode(DEGREES);
 
-  createUIRow1();
-  createUIRow2();
-  createUIRow3();
+  createUIRowTop(topUIContainer);
+  createUIRow1(uiContainer);
+  createUIRow2(uiContainer);
+  createUIRow3(uiContainer);
+  createUIRow4(uiContainer);
 
   updateTextPoints();
 
-  // Loading message
   loadingMessage = createDiv("🎞️ Recording GIF... Please wait...");
-  loadingMessage.position(10, height + 180);
+  loadingMessage.parent(topUIContainer);
   loadingMessage.style('font-size', '16px');
   loadingMessage.style('font-weight', 'bold');
-  loadingMessage.hide(); // hidden until recording starts
+  loadingMessage.hide();
 }
 
 function draw() {
@@ -52,6 +59,18 @@ function draw() {
   let yOffset = yOffsetSlider.value();
   let wavePhase = phaseSlider.value();
 
+  if (angleStep === 0) {
+    if (!hasWarnedPhase && wavePhase !== 0) {
+      alert("⚠️ Please increase Angle Step above 0 to use Wave Phase.");
+      hasWarnedPhase = true;
+    }
+    phaseSlider.value(0);
+    phaseSlider.attribute('disabled', true);
+  } else {
+    phaseSlider.removeAttribute('disabled');
+    hasWarnedPhase = false;
+  }
+
   fill(fillCol);
   if (strokeEnabled) {
     stroke(strokeCol);
@@ -60,8 +79,11 @@ function draw() {
     noStroke();
   }
 
+  let xAmp = xAmpSlider.value();
+  let xAngleStep = xAngleStepSlider.value();
+
   for (let i = 0; i < points.length; i++) {
-    let x = points[i].x + xOffset;
+    let x = points[i].x + xAmp * sin(angle + i * xAngleStep) + xOffset;
     let y = points[i].y + r * sin(angle + i * angleStep + wavePhase) + yOffset;
     ellipse(x, y, ellipseSize, ellipseSize);
   }
@@ -71,22 +93,17 @@ function draw() {
   if (isCapturing) {
     capturer.capture(cnv.canvas);
     frameCountForGif++;
-    console.log(`Capturing frame ${frameCountForGif}/${captureFrames}`);
-
     if (frameCountForGif >= captureFrames) {
-      console.log("✅ GIF capture complete.");
       capturer.stop();
       capturer.save();
       isCapturing = false;
       showUI();
-      loadingMessage.hide(); // ⬅️ hide after saving
+      loadingMessage.hide();
     }
   }
 }
 
 function startGifRecording() {
-  console.log("🎥 Starting GIF recording...");
-
   let durationSec = int(durationSelect.value());
   let framerate = 30;
   captureFrames = durationSec * framerate;
@@ -98,7 +115,7 @@ function startGifRecording() {
   });
 
   hideUI();
-  loadingMessage.show(); // ⬅️ show message
+  loadingMessage.show();
   isCapturing = true;
   frameCountForGif = 0;
   angle = 0;
@@ -110,18 +127,11 @@ function manualGifLoop() {
   if (!isCapturing || frameCountForGif >= captureFrames) {
     capturer.stop();
     capturer.save();
-isCapturing = false;
-showUI();
-
-setTimeout(() => {
-  loadingMessage.hide();
-}, 10000); // ✅ Delay hiding until GIF download is triggered
-
-    
-    console.log("✅ GIF capture complete.");
+    isCapturing = false;
+    showUI();
+    setTimeout(() => loadingMessage.hide(), 3000);
     return;
   }
-
   draw();
   capturer.capture(cnv.canvas);
   frameCountForGif++;
@@ -130,101 +140,122 @@ setTimeout(() => {
 
 function updateTextPoints() {
   let inputText = textInput.value();
-  points = font.textToPoints(inputText, 20, 300, 160, {
+  points = font.textToPoints(inputText, 20, height / 2, height / 2, {
     sampleFactor: 0.2,
     simplifyThreshold: 0
   });
 }
 
-// === UI Layout ===
 
-function createUIRow1() {
-  createDiv("Amplitude").position(10, height + 5);
-  rSlider = createSlider(0, 100, 15);
-  rSlider.position(10, height + 25).style('width', '100px');
 
-  createDiv("Angle Step").position(130, height + 5);
-  angleStepSlider = createSlider(0, 20, 2, 0.1);
-  angleStepSlider.position(130, height + 25).style('width', '100px');
-
-  createDiv("Speed").position(250, height + 5);
-  speedSlider = createSlider(0, 50, 30);
-  speedSlider.position(250, height + 25).style('width', '100px');
-
-  createDiv("Size").position(370, height + 5);
-  sizeSlider = createSlider(1, 30, 10);
-  sizeSlider.position(370, height + 25).style('width', '100px');
-}
-
-function createUIRow2() {
-  createDiv("X Offset").position(10, height + 60);
-  xOffsetSlider = createSlider(-200, 200, 0);
-  xOffsetSlider.position(10, height + 80).style('width', '100px');
-
-  createDiv("Y Offset").position(130, height + 60);
-  yOffsetSlider = createSlider(-200, 200, 0);
-  yOffsetSlider.position(130, height + 80).style('width', '100px');
-
-  createDiv("Wave Phase").position(250, height + 60);
-  phaseSlider = createSlider(0, 360, 0);
-  phaseSlider.position(250, height + 80).style('width', '100px');
-
-  createDiv("Stroke Weight").position(370, height + 60);
-  strokeWeightSlider = createSlider(0, 10, 1, 0.1);
-  strokeWeightSlider.position(370, height + 80).style('width', '100px');
-
-  createDiv("Toggle Stroke").position(500, height + 60);
-  strokeToggle = createCheckbox('', true);
-  strokeToggle.position(535, height + 80);
-
-  createDiv("GIF Duration").position(620, height + 60);
-  durationSelect = createSelect();
-  durationSelect.position(620, height + 80);
-  [2, 4, 6, 8, 10].forEach(sec => {
-    durationSelect.option(`${sec} sec`, sec);
-  });
-  durationSelect.selected('4');
-}
-
-function createUIRow3() {
-  createDiv("Type Text").position(10, height + 115);
+function createUIRowTop(parent) {
+  let row = createDiv().class('ui-row').parent(parent);
+  createDiv("Type Text").parent(row);
   textInput = createInput('hello');
-  textInput.position(10, height + 135);
-  textInput.input(updateTextPoints);
+  textInput.parent(row).input(updateTextPoints);
 
-  createDiv("Fill Colour").position(180, height + 115);
-  fillPicker = createColorPicker('#FFFFFF');
-  fillPicker.position(180, height + 135);
+  createDiv("GIF Duration").parent(row);
+  durationSelect = createSelect();
+  durationSelect.parent(row);
+  [2, 4, 6, 8, 10].forEach(sec => durationSelect.option(`${sec} sec`, sec));
+  durationSelect.selected('4');
 
-  createDiv("Stroke Colour").position(280, height + 115);
-  strokePicker = createColorPicker('#000000');
-  strokePicker.position(280, height + 135);
-
-  createDiv("Background").position(380, height + 115);
-  bgPicker = createColorPicker('#DDDDDD');
-  bgPicker.position(380, height + 135);
-
-  createDiv("Save as JPG").position(500, height + 115);
-  saveButton = createButton("Save Image");
-  saveButton.position(500, height + 135);
+  saveButton = createButton("Save Image").parent(row);
   saveButton.mousePressed(() => saveCanvas('text_visual', 'jpg'));
 
-  createDiv("Record GIF").position(620, height + 115);
-  gifButton = createButton("Record GIF");
-  gifButton.position(620, height + 135);
+  gifButton = createButton("Record GIF").parent(row);
   gifButton.mousePressed(startGifRecording);
 }
 
+function createUIRow1(parent) {
+  let row = createDiv().class('ui-row').parent(parent);
+  createDiv("Toggle Stroke").parent(row);
+  strokeToggle = createCheckbox('', true).parent(row);
+
+  createDiv("Fill Colour").parent(row);
+  fillPicker = createColorPicker('#FFFFFF').parent(row);
+
+  createDiv("Stroke Colour").parent(row);
+  strokePicker = createColorPicker('#000000').parent(row);
+
+  createDiv("Stroke Weight").parent(row);
+  strokeWeightSlider = createSlider(0, 10, 1, 0.1).parent(row);
+}
+
+function createUIRow2(parent) {
+  let row = createDiv().class('ui-row').parent(parent);
+  createDiv("Background").parent(row);
+  bgPicker = createColorPicker('#DDDDDD').parent(row);
+
+  createDiv("Size").parent(row);
+  sizeSlider = createSlider(1, 30, 10).parent(row);
+
+  createDiv("X Offset").parent(row);
+  xOffsetSlider = createSlider(0, 330, 165).parent(row); // maxWidth / 2
+
+  createDiv("Y Offset").parent(row);
+  yOffsetSlider = createSlider(10, 170, 80).parent(row); // 400 / 2
+}
+
+function createUIRow3(parent) {
+  let row = createDiv().class('ui-row').parent(parent);
+  createDiv("Wave Phase").parent(row);
+  phaseSlider = createSlider(0, 360, 0).parent(row);
+
+  createDiv("X Amplitude").parent(row);
+  xAmpSlider = createSlider(0, 100, 0).parent(row);
+
+  createDiv("X Angle Step").parent(row);
+  xAngleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
+}
+
+function createUIRow4(parent) {
+  let row = createDiv().class('ui-row').parent(parent);
+  createDiv("Amplitude").parent(row);
+  rSlider = createSlider(0, 100, 15).parent(row);
+
+  createDiv("Angle Step").parent(row);
+  angleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
+
+  createDiv("Speed").parent(row);
+  speedSlider = createSlider(0, 50, 30).parent(row);
+}
+
 function hideUI() {
-  selectAll('div').forEach(el => el.hide());
+  selectAll('.ui-row').forEach(el => el.hide());
   selectAll('input').forEach(el => el.hide());
   selectAll('button').forEach(el => el.hide());
   selectAll('select').forEach(el => el.hide());
 }
 
 function showUI() {
-  selectAll('div').forEach(el => el.show());
+  selectAll('.ui-row').forEach(el => el.show());
   selectAll('input').forEach(el => el.show());
   selectAll('button').forEach(el => el.show());
   selectAll('select').forEach(el => el.show());
+}
+
+function windowResized() {
+  let maxWidth = 800;
+  let newWidth = windowWidth > maxWidth ? maxWidth : windowWidth - 40;
+  resizeCanvas(newWidth, 400);
+  updateTextPoints();
+
+  // Calculate scale factor relative to 800px
+  let scaleFactor = newWidth / maxWidth;
+
+  // Calculate new min/max
+  let xMin = -maxWidth / 2 * scaleFactor;
+  let xMax = maxWidth / 2 * scaleFactor;
+  let yMin = 10 * scaleFactor;
+  let yMax = 170 * scaleFactor;
+
+  // Update sliders properly
+  xOffsetSlider.elt.min = xMin;
+  xOffsetSlider.elt.max = xMax;
+  xOffsetSlider.value(constrain(xOffsetSlider.value(), xMin, xMax));
+
+  yOffsetSlider.elt.min = yMin;
+  yOffsetSlider.elt.max = yMax;
+  yOffsetSlider.value(constrain(yOffsetSlider.value(), yMin, yMax));
 }
