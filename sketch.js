@@ -150,6 +150,23 @@ function updateTextPoints() {
 
 function createUIRowTop(parent) {
   let row = createDiv().class('ui-row').parent(parent);
+
+  // ➕ Add Font Selector DIV
+  createDiv("Base").parent(row);
+  let fontSelect = createSelect();
+  fontSelect.option('Pacifico');
+  fontSelect.option('Inconsolata Condensed Bold');
+  fontSelect.parent(row);
+  fontSelect.changed(() => {
+    let selected = fontSelect.value();
+    if (selected === 'Pacifico') {
+      font = loadFont('fonts/Pacifico-Regular.ttf', updateTextPoints);
+    } else if (selected === 'Inconsolata Condensed Bold') {
+      font = loadFont('fonts/Inconsolata_Condensed-Bold.ttf', updateTextPoints);
+    }
+  });
+
+  // Existing Type Text
   createDiv("Type Text").parent(row);
   textInput = createInput('hello');
   textInput.parent(row).input(updateTextPoints);
@@ -166,6 +183,7 @@ function createUIRowTop(parent) {
   gifButton = createButton("Record GIF").parent(row);
   gifButton.mousePressed(startGifRecording);
 }
+
 
 function createUIRow1(parent) {
   let row = createDiv().class('ui-row').parent(parent);
