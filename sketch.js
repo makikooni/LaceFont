@@ -35,7 +35,7 @@ function preload() {
 
 let pixelDensityFactor = 2;
 function setup() {
-  pixelDensity(pixelDensityFactor); // ⬅️ Add this line
+  pixelDensity(pixelDensityFactor);
   cnv = createCanvas(800, 400);
   cnv.parent('canvas-container');
 
@@ -55,23 +55,37 @@ function setup() {
   loadingMessage.style('font-weight', 'bold');
   loadingMessage.hide();
 }
+
 function updateTextPoints() {
   let inputText = textInput.value();
-  let scaleSize = sizeSlider.value();
+  let scaleSize = sizeSlider.value(); // From slider, 1 to 4
 
   maskGfx = createGraphics(width, height);
   maskGfx.background(0);
   maskGfx.fill(255);
   maskGfx.textFont(font);
-  maskGfx.textSize(scaleSize * 100);
 
-  // 🔍 Get the bounding box of the text
-  let bounds = font.textBounds(inputText, 0, 0, scaleSize * 100);
+  let baseFontSize = 100; // consistent base size for all fonts
+  let visualScale = scaleSize; // actual slider-based scale
 
-  // 🪡 Calculate x and y to centre it visually
+  // Determine the font height at base size
+  let boundsRef = font.textBounds("hello", 0, 0, baseFontSize); // using "hello" for consistent ref
+  let fontHeight = boundsRef.h;
+
+  // Define a reference height you want all fonts to match visually at scale 1
+  let targetHeight = 200;
+
+  // Normalise each font to appear visually similar at scale 1
+  let correctionFactor = targetHeight / fontHeight;
+
+  // Final size = base * correction * slider
+  let adjustedSize = baseFontSize * correctionFactor * visualScale;
+
+  maskGfx.textSize(adjustedSize);
+  let bounds = font.textBounds(inputText, 0, 0, adjustedSize);
+
   let x = width / 2 - bounds.w / 2;
   let y = height / 2 + bounds.h / 2;
-
   maskGfx.text(inputText, x, y);
   maskGfx.loadPixels();
 
@@ -101,6 +115,8 @@ function updateTextPoints() {
     points.push(row);
   }
 }
+
+
 
 
 
@@ -344,7 +360,7 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
 
 
   createDiv("Lacework Size").parent(row);
-  sizeSlider = createSlider(1, 4, 2.5, 0.1).parent(row);
+  sizeSlider = createSlider(0.1, 1.8, 1, 0.1).parent(row);
   sizeSlider.input(updateTextPoints); // Add this line to link size slider with text size update
 
 
@@ -355,7 +371,7 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
   xOffsetSlider = createSlider(-100, 300, 0).parent(row);
 
   createDiv("Up/Down").parent(row);
-  yOffsetSlider = createSlider(-150, 120, -50).parent(row);
+  yOffsetSlider = createSlider(-150, 120, -10).parent(row);
   createDiv("Thread Curve (U/D)").parent(row);
   rSlider = createSlider(0, 100, 10).parent(row);
   createDiv("Loom Shift").parent(row);
