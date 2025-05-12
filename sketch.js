@@ -55,17 +55,24 @@ function setup() {
   loadingMessage.style('font-weight', 'bold');
   loadingMessage.hide();
 }
-
 function updateTextPoints() {
   let inputText = textInput.value();
   let scaleSize = sizeSlider.value();
+
   maskGfx = createGraphics(width, height);
   maskGfx.background(0);
   maskGfx.fill(255);
   maskGfx.textFont(font);
   maskGfx.textSize(scaleSize * 100);
-  maskGfx.textAlign(CENTER, CENTER);
-  maskGfx.text(inputText, width / 2, height / 2);
+
+  // 🔍 Get the bounding box of the text
+  let bounds = font.textBounds(inputText, 0, 0, scaleSize * 100);
+
+  // 🪡 Calculate x and y to centre it visually
+  let x = width / 2 - bounds.w / 2;
+  let y = height / 2 + bounds.h / 2;
+
+  maskGfx.text(inputText, x, y);
   maskGfx.loadPixels();
 
   points = [];
@@ -94,6 +101,7 @@ function updateTextPoints() {
     points.push(row);
   }
 }
+
 
 
 function draw() {
@@ -316,27 +324,27 @@ function createUIRowTop(parent) {
 function createUIRow1(parent) {
   let row = createDiv().class('ui-row').parent(parent);
 
-  createDiv("Raised Thread").parent(row);
-  fillPicker = createColorPicker('#FFFFFF').parent(row);
+  createDiv("Underlay Thread").parent(row);
+  strokeToggle = createCheckbox('', true).parent(row);
 
   createDiv("Underlay Thread").parent(row);
   strokePicker = createColorPicker('#000000').parent(row);
 
-  createDiv("Bobbin Ground").parent(row);
-  bgPicker = createColorPicker('#fff3f5').parent(row);
+  createDiv("Raised Thread").parent(row);
+  fillPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Working Thread").parent(row);
 threadPicker = createColorPicker('#FFFFFF').parent(row);
 
-  createDiv("Underlay Thread").parent(row);
-  strokeToggle = createCheckbox('', true).parent(row);
+  createDiv("Bobbin Ground").parent(row);
+  bgPicker = createColorPicker('#fff3f5').parent(row);
 
   createDiv("Thread Thickness").parent(row);
   strokeWeightSlider = createSlider(0, 10, 1, 0.1).parent(row);
 
 
   createDiv("Lacework Size").parent(row);
-  sizeSlider = createSlider(1, 3, 2.5, 0.1).parent(row);
+  sizeSlider = createSlider(1, 4, 2.5, 0.1).parent(row);
   sizeSlider.input(updateTextPoints); // Add this line to link size slider with text size update
 
 
@@ -348,15 +356,13 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Up/Down").parent(row);
   yOffsetSlider = createSlider(-150, 120, -50).parent(row);
-
+  createDiv("Thread Curve (U/D)").parent(row);
+  rSlider = createSlider(0, 100, 10).parent(row);
   createDiv("Loom Shift").parent(row);
   phaseSlider = createSlider(0, 360, 360).parent(row);
 
   createDiv("Thread Sway (L/R)").parent(row);
   xAmpSlider = createSlider(0, 100, 0).parent(row);
-  
-  createDiv("Thread Curve (U/D)").parent(row);
-  rSlider = createSlider(0, 100, 10).parent(row);
 
   createDiv("Sway Precision").parent(row);
   xAngleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
@@ -378,11 +384,19 @@ function hideUI() {
 }
 
 function showUI() {
-  selectAll('.ui-row').forEach(el => el.show());
+  selectAll('.ui-row').forEach(el => {
+    el.show();
+    el.style('display', 'grid'); // ✅ use grid, not flex
+    el.style('grid-template-columns', 'repeat(4, 1fr)');
+    el.style('gap', '12px');
+  });
+
   selectAll('input').forEach(el => el.show());
   selectAll('button').forEach(el => el.show());
   selectAll('select').forEach(el => el.show());
 }
+
+
 
 function windowResized() {
   let maxWidth = 800;
