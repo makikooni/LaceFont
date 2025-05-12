@@ -20,7 +20,7 @@ let isCapturing = false;
 let captureFrames = 120;
 let frameCountForGif = 0;
 
-let rSlider, angleStepSlider, speedSlider, sizeSlider;
+let rSlider, angleStepSlider, speedSlider, sizeSlider, spacingSlider;
 let fillPicker, strokePicker, strokeWeightSlider, strokeToggle, threadPicker;
 let bgPicker, xOffsetSlider, yOffsetSlider, phaseSlider;
 let textInput, saveButton, gifButton;
@@ -55,30 +55,23 @@ function setup() {
   loadingMessage.style('font-weight', 'bold');
   loadingMessage.hide();
 }
-
 function updateTextPoints() {
   let inputText = textInput.value();
-  let scaleSize = sizeSlider.value(); // From slider, 1 to 4
+  let scaleSize = sizeSlider.value();
+  spacing = spacingSlider.value();
 
   maskGfx = createGraphics(width, height);
+  maskGfx.pixelDensity(1);
   maskGfx.background(0);
   maskGfx.fill(255);
   maskGfx.textFont(font);
 
-  let baseFontSize = 100; // consistent base size for all fonts
-  let visualScale = scaleSize; // actual slider-based scale
-
-  // Determine the font height at base size
-  let boundsRef = font.textBounds("hello", 0, 0, baseFontSize); // using "hello" for consistent ref
+  let baseFontSize = 100;
+  let visualScale = scaleSize;
+  let boundsRef = font.textBounds("hello", 0, 0, baseFontSize);
   let fontHeight = boundsRef.h;
-
-  // Define a reference height you want all fonts to match visually at scale 1
   let targetHeight = 200;
-
-  // Normalise each font to appear visually similar at scale 1
   let correctionFactor = targetHeight / fontHeight;
-
-  // Final size = base * correction * slider
   let adjustedSize = baseFontSize * correctionFactor * visualScale;
 
   maskGfx.textSize(adjustedSize);
@@ -350,7 +343,7 @@ function createUIRow1(parent) {
   fillPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Working Thread").parent(row);
-threadPicker = createColorPicker('#FFFFFF').parent(row);
+  threadPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Bobbin Ground").parent(row);
   bgPicker = createColorPicker('#fff3f5').parent(row);
@@ -358,11 +351,9 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
   createDiv("Thread Thickness").parent(row);
   strokeWeightSlider = createSlider(0, 10, 1, 0.1).parent(row);
 
-
   createDiv("Lacework Size").parent(row);
   sizeSlider = createSlider(0.1, 1.8, 1, 0.1).parent(row);
-  sizeSlider.input(updateTextPoints); // Add this line to link size slider with text size update
-
+  sizeSlider.input(updateTextPoints);
 
   createDiv("Weave Tempo").parent(row);
   speedSlider = createSlider(0, 200, 0).parent(row);
@@ -372,8 +363,10 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Up/Down").parent(row);
   yOffsetSlider = createSlider(-150, 120, -10).parent(row);
+
   createDiv("Thread Curve (U/D)").parent(row);
   rSlider = createSlider(0, 100, 10).parent(row);
+
   createDiv("Loom Shift").parent(row);
   phaseSlider = createSlider(0, 360, 360).parent(row);
 
@@ -386,11 +379,14 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
   createDiv("Weave Density").parent(row);
   angleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
 
-    createDiv("Skill level").parent(row);
+  createDiv("Stich Spacing").parent(row);
+  spacingSlider = createSlider(2, 18, 4, 1).parent(row);
+  spacingSlider.input(updateTextPoints);
+
+  createDiv("Skill level").parent(row);
   noiseSlider = createSlider(0, 10, 10, 0.5).parent(row);
-
-
 }
+
 
 function hideUI() {
   selectAll('.ui-row').forEach(el => el.hide());
