@@ -316,10 +316,10 @@ function createUIRowTop(parent) {
 function createUIRow1(parent) {
   let row = createDiv().class('ui-row').parent(parent);
 
-  createDiv("Highlight Thread").parent(row);
+  createDiv("Raised Thread").parent(row);
   fillPicker = createColorPicker('#FFFFFF').parent(row);
 
-  createDiv("Shadow Thread").parent(row);
+  createDiv("Underlay Thread").parent(row);
   strokePicker = createColorPicker('#000000').parent(row);
 
   createDiv("Bobbin Ground").parent(row);
@@ -328,7 +328,7 @@ function createUIRow1(parent) {
   createDiv("Working Thread").parent(row);
 threadPicker = createColorPicker('#FFFFFF').parent(row);
 
-  createDiv("Shadow Threads").parent(row);
+  createDiv("Underlay Thread").parent(row);
   strokeToggle = createCheckbox('', true).parent(row);
 
   createDiv("Thread Thickness").parent(row);
@@ -349,7 +349,7 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
   createDiv("Up/Down").parent(row);
   yOffsetSlider = createSlider(-150, 120, -50).parent(row);
 
-  createDiv("Wiggle Position").parent(row);
+  createDiv("Loom Shift").parent(row);
   phaseSlider = createSlider(0, 360, 360).parent(row);
 
   createDiv("Thread Sway (L/R)").parent(row);
