@@ -109,7 +109,8 @@ function draw() {
   let yOffset = yOffsetSlider.value();
   let scaleSize = sizeSlider.value();
   let strokeW = strokeWeightSlider.value();
-  let noiseAmt = noiseSlider.value();
+  let noiseAmt = map(noiseSlider.value(), 0, 10, 10, 0);
+
 
   for (let y = 0; y < points.length - 1; y++) {
     for (let x = 0; x < points[y].length; x++) {
@@ -163,7 +164,15 @@ function drawThread(p1, p2) {
   let midX = (p1.x + p2.x) / 2;
   let midY = (p1.y + p2.y) / 2;
 
-  let ctrlOffset = rSlider.value() * 1.4 * sin((p1.x + p1.y + frameCount) * 0.03 + phaseSlider.value());
+  let wave = rSlider.value() * 1.4 * sin((p1.x + p1.y + frameCount) * 0.03 + phaseSlider.value());
+
+  // Add subtle noise distortion
+  let noiseAmt =  map(noiseSlider.value(), 0, 10, 10, 0);
+  let n = noise(p1.x * 0.01, p1.y * 0.01, frameCount * 0.01);
+  let noiseOffset = map(n, 0, 1, -1, 1) * noiseAmt * 10;
+
+  let ctrlOffset = wave + noiseOffset;
+
 
   let ctrl1X = lerp(p1.x, midX, 0.5);
   let ctrl1Y = lerp(p1.y, midY, 0.5) + ctrlOffset;
@@ -179,10 +188,11 @@ function drawThread(p1, p2) {
     bezier(p1.x + 1.5, p1.y + 1.5, ctrl1X + 1.5, ctrl1Y + 1.5, ctrl2X + 1.5, ctrl2Y + 1.5, p2.x + 1.5, p2.y + 1.5);
   }
 
-  // Main thread
-  stroke(255);
+  // Main thread (mid-tone thread colour)
+  stroke(threadPicker.color());
   strokeWeight(strokeW * 0.1);
   bezier(p1.x, p1.y, ctrl1X, ctrl1Y, ctrl2X, ctrl2Y, p2.x, p2.y);
+
 
   // Highlight layer
   stroke(fillPicker.color());
@@ -306,31 +316,31 @@ function createUIRowTop(parent) {
 function createUIRow1(parent) {
   let row = createDiv().class('ui-row').parent(parent);
 
-  createDiv("Fill Colour").parent(row);
+  createDiv("Highlight Thread").parent(row);
   fillPicker = createColorPicker('#FFFFFF').parent(row);
 
-  createDiv("Stroke Colour").parent(row);
+  createDiv("Shadow Thread").parent(row);
   strokePicker = createColorPicker('#000000').parent(row);
 
-    createDiv("Background").parent(row);
+  createDiv("Bobbin Ground").parent(row);
   bgPicker = createColorPicker('#fff3f5').parent(row);
 
-  createDiv("Thread Colour").parent(row);
+  createDiv("Working Thread").parent(row);
 threadPicker = createColorPicker('#FFFFFF').parent(row);
 
-  createDiv("Toggle Stroke").parent(row);
+  createDiv("Shadow Threads").parent(row);
   strokeToggle = createCheckbox('', true).parent(row);
 
-  createDiv("Stroke Weight").parent(row);
+  createDiv("Thread Thickness").parent(row);
   strokeWeightSlider = createSlider(0, 10, 1, 0.1).parent(row);
 
 
-  createDiv("Size").parent(row);
+  createDiv("Lacework Size").parent(row);
   sizeSlider = createSlider(1, 3, 2.5, 0.1).parent(row);
   sizeSlider.input(updateTextPoints); // Add this line to link size slider with text size update
 
 
-  createDiv("Speed").parent(row);
+  createDiv("Weave Tempo").parent(row);
   speedSlider = createSlider(0, 200, 0).parent(row);
 
   createDiv("Left/Right").parent(row);
@@ -342,20 +352,20 @@ threadPicker = createColorPicker('#FFFFFF').parent(row);
   createDiv("Wiggle Position").parent(row);
   phaseSlider = createSlider(0, 360, 360).parent(row);
 
-  createDiv("Wiggle L/R").parent(row);
+  createDiv("Thread Sway (L/R)").parent(row);
   xAmpSlider = createSlider(0, 100, 0).parent(row);
   
-  createDiv("Wiggle U/D").parent(row);
+  createDiv("Thread Curve (U/D)").parent(row);
   rSlider = createSlider(0, 100, 10).parent(row);
 
-  createDiv("Wiggle Detail").parent(row);
+  createDiv("Sway Precision").parent(row);
   xAngleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
 
-  createDiv("Wiggle Frequency").parent(row);
+  createDiv("Weave Density").parent(row);
   angleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
 
-    createDiv("Thread Noise").parent(row);
-  noiseSlider = createSlider(0, 10, 0, 0.5).parent(row);
+    createDiv("Skill level").parent(row);
+  noiseSlider = createSlider(0, 10, 10, 0.5).parent(row);
 
 
 }
