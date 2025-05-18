@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lace Love</title>
+
+  <style>
+    @font-face {
+      font-family: 'LaceLove';
+      src: url('LaceLove-Regular.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 10px;
+      font-family: 'Playfair Display', 'Georgia', serif;
+      background: linear-gradient(135deg, #fdf6f0, #e6dada);
+      text-align: center;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1500px;
+      margin: 40px auto;
+      margin-top: 10px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      overflow: visible;
+    }
+
+ .container2 {
+  display: inline-block; /* Make it size to its contents */
+  padding: 20px; /* Space around the inner .container */
+  border-radius: 32px;
+  background-image:
+    radial-gradient(circle, #e6cfc4 2px, transparent 2px),
+    radial-gradient(circle, #e6cfc4 2px, transparent 2px);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+  background-repeat: repeat;
+}
+
+
+    h1 {
+      font-size: 3rem;
+      color: #6d4c41;
+      font-family: 'Dancing Script', cursive;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      color: #7b5e52;
+    }
+
+    p {
+      max-width: 600px;
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: #5c5c5c;
+      margin: 0 auto 30px auto;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .launch-button {
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      background-color: #a1887f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      transition: background-color 0.3s ease;
+      margin: 20px;
+    }
+
+    .launch-button:hover {
+      background-color: #8d6e63;
+    }
+
+    .font-preview {
+      font-family: 'LaceLove', serif;
+      font-size: 160px;
+      text-align: center;
+      margin: 30px auto;
+      max-width: 80vw;
+      word-wrap: break-word;
+      line-height: 0.8;
+      padding: 10px 5px;
+      padding-bottom: 40px;
+      background: #F7F1ED;
+      border: 2px dashed #d2b6a2;
+      border-radius: 16px;
+    }
+
+    hr {
+      width: 60%;
+      border: none;
+      border-top: 1px dashed #d4c1b9;
+      margin: 40px auto;
+    }
+  </style>
+</head>
+
+<body>
+    <div class="container2">
+  <div class="container">
+    <h1>Lace Love Font</h1>
+    <p>
+      Download the polished version of the original Lace Love display font in TTF format.
+    </p>
+
+    <a href="LaceLove-Regular.ttf" download>
+      <button class="launch-button">Download</button>
+    </a>
+
+    <hr />
+
+    <h2>Specimen:</h2>
+    <div class="font-preview">
+      The quick brown fox jumps over the lazy dog
+    </div>
+
+    <hr />
+
+    <h2>Glyphs:</h2>
+    <div class="font-preview">
+      1 2 3 4 5 6 7 8 9 0
+      Aa Bb Cc Dd Ee Ff Gg
+      Hh Ii Jj Kk Ll Mm Nn
+      Oo Pp Qq Rr Ss Tt Uu
+      Vv Ww Xx Yy Zz
+    </div>
+
+    <hr />
+
+    <a href="index.html">
+      <button class="launch-button">Go back</button>
+    </a>
+  </div>
+  </div>
+</body>
+</html>

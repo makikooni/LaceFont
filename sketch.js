@@ -355,7 +355,7 @@ function createUIRow1(parent) {
   threadPicker = createColorPicker('#FFFFFF').parent(row);
 
   createDiv("Bobbin Ground").parent(row);
-  bgPicker = createColorPicker('#fff3f5').parent(row);
+  bgPicker = createColorPicker('#F7F1ED').parent(row);
 
   createDiv("Thread Thickness").parent(row);
   strokeWeightSlider = createSlider(0, 10, 1, 0.1).parent(row);
@@ -420,7 +420,7 @@ function showUI() {
 
 
 function windowResized() {
-  let maxWidth = 800;
+  let maxWidth = 900;
   let newWidth = windowWidth > maxWidth ? maxWidth : windowWidth - 40;
   resizeCanvas(newWidth, 400);
   updateTextPoints();

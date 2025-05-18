@@ -1,7 +1,9 @@
 /* 🌸 Global background to match intro */
-body {
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  min-height: 100vh;
   font-family: 'Playfair Display', 'Georgia', serif;
   background: linear-gradient(135deg, #fdf6f0, #e6dada);
   text-align: center;
@@ -19,7 +21,7 @@ body {
 
 /* 🌸 Container styling */
 #canvas-container, #ui-container, #top-ui-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 20px auto;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
@@ -157,3 +159,21 @@ div {
   color: #5f4740;
   opacity: 0.8;
 }
+
+   .launch-button {
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      background-color: #a1887f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      transition: background-color 0.3s ease;
+      margin: 20px;
+    }
+
+    .launch-button:hover {
+      background-color: #8d6e63;
+    }
