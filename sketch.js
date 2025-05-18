@@ -54,6 +54,15 @@ function setup() {
   loadingMessage.style('font-size', '16px');
   loadingMessage.style('font-weight', 'bold');
   loadingMessage.hide();
+
+  // When sketch is ready, hide loading screen:
+  document.getElementById('loading-screen').style.display = 'none';
+
+  // Show main content
+  document.getElementById('main-title').style.display = 'block';
+  document.getElementById('canvas-container').style.display = 'block';
+  document.getElementById('top-ui-container').style.display = 'block';
+  document.getElementById('ui-container').style.display = 'block';
 }
 function updateTextPoints() {
   let inputText = textInput.value();

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dynamic Type Tool – p5 + CCapture + SVG</title>
+
+    <!-- 🌸 Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+    <!-- 🌸 Core Libraries (in correct order) -->
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.5/lib/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/addons/p5.sound.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ccapture.js@1.1.0/build/CCapture.all.min.js"></script>
+
+<!-- ✅ Load p5.js SVG addon (this one works) -->
+<script src="https://cdn.jsdelivr.net/npm/p5.js-svg@1.0.2"></script>
+
+
+
+
+    <!-- 🌸 Custom styles -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+<body>
+  <!-- 🌸 Loading Screen -->
+  <div id="loading-screen">
+    <h1>Dynamic Type Tool</h1>
+    <p>Loading…</p>
+  </div>
+
+  <main>
+    <h1 id="main-title" style="display: none;">Dynamic Type Tool</h1>
+    <div id="canvas-container" style="display: none;"></div>
+    <div id="top-ui-container" style="display: none;"></div>
+    <div id="ui-container" style="display: none;"></div>
+  </main>
+
+  <!-- 🌸 Your p5 sketch (should always load last) -->
+  <script src="sketch.js"></script>
+</body>
+</html>
