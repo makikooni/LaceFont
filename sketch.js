@@ -36,7 +36,7 @@ function preload() {
 let pixelDensityFactor = 2;
 function setup() {
   pixelDensity(pixelDensityFactor);
-  cnv = createCanvas(800, 400);
+  cnv = createCanvas(900, 400);
   cnv.parent('canvas-container');
 
   let topUIContainer = select('#top-ui-container');
