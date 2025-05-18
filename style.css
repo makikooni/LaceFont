@@ -1,132 +1,114 @@
-/* 🌸 Global background with soft gradient */
+/* 🌸 Global background to match intro */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Playfair Display', 'Georgia', serif;
-  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  background: linear-gradient(135deg, #fdf6f0, #e6dada);
   text-align: center;
 }
 
-
+/* 🌸 Title styling */
 #main-title {
   font-family: 'Dancing Script', cursive;
   font-size: 3rem;
   font-weight: 400;
-  color: #a05278;
+  color: #6d4c41;
   margin: 30px 0 10px 0;
   letter-spacing: 2px;
 }
 
-
-
-
-/* 🌸 Center container for canvas and UI */
+/* 🌸 Container styling */
 #canvas-container, #ui-container, #top-ui-container {
   max-width: 800px;
   margin: 20px auto;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 20px;
   text-align: left;
   position: relative;
 }
 
-/* 🌸 Soft lace-like radial gradient border (behind content) */
-#canvas-container::before, 
-#ui-container::before, 
+/* 🌸 Subtle lace-like gradient border */
+#canvas-container::before,
+#ui-container::before,
 #top-ui-container::before {
   content: "";
   position: absolute;
   top: -12px; left: -12px;
   right: -12px; bottom: -12px;
   border-radius: 24px;
-  background-image: radial-gradient(circle, #e0b4c2 20%, transparent 20%),
-                    radial-gradient(circle, #e0b4c2 20%, transparent 20%);
+  background-image: radial-gradient(circle, #e6cfc4 20%, transparent 20%),
+                    radial-gradient(circle, #e6cfc4 20%, transparent 20%);
   background-size: 12px 12px;
   background-position: 0 0, 6px 6px;
-  z-index: -1; /* 👈 send behind content */
+  z-index: -1;
 }
 
-
-/* 🌸 UI container layout */
+/* 🌸 UI layout */
 #ui-container, #top-ui-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-
 .ui-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 3 equal-width columns */
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 .ui-row > div {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* consistent left alignment for labels and sliders */
+  align-items: flex-start;
 }
-
-
-
 
 /* 🌸 Sliders */
 input[type=range] {
   -webkit-appearance: none;
   width: 100px;
   height: 4px;
-  background: #e0b4c2;
+  background: #d7b2a3;
   border-radius: 5px;
   outline: none;
   margin: 4px;
-  accent-color: #e0b4c2;
+  accent-color: #d7b2a3;
 }
 
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #d48aa2;
-  cursor: pointer;
-  border: none;
-}
-
+input[type=range]::-webkit-slider-thumb,
 input[type=range]::-moz-range-thumb {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #d48aa2;
+  background: #a1887f;
   cursor: pointer;
   border: none;
 }
 
-/* 🌸 Disabled sliders */
+/* 🌸 Disabled state */
 input[type=range]:disabled {
   background: #ddd;
   opacity: 0.5;
 }
-
 input[type=range]:disabled::-webkit-slider-thumb,
 input[type=range]:disabled::-moz-range-thumb {
   background: #aaa;
 }
 
-/* 🌸 Colour pickers, text inputs, selects */
+/* 🌸 Form elements */
 input[type=color],
 input[type=text],
 select {
   margin: 4px;
   padding: 4px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #c7bbb2;
 }
 
 /* 🌸 Buttons */
 button {
-  background-color: #e0b4c2;
-  color: #fff;
+  background-color: #a1887f;
+  color: white;
   border: none;
   padding: 6px 12px;
   margin: 4px;
@@ -137,16 +119,18 @@ button {
 }
 
 button:hover {
-  background-color: #d48aa2;
+  background-color: #8d6e63;
 }
 
-/* 🌸 Labels / small divs */
+/* 🌸 Label text */
 div {
   font-size: 14px;
   margin: 7px;
   font-family: 'Quicksand', 'Arial', sans-serif;
+  color: #5c5c5c;
 }
 
+/* 🌸 Loading screen */
 #loading-screen {
   position: fixed;
   top: 0;
@@ -164,7 +148,7 @@ div {
 
 #loading-screen h1 {
   font-size: 2rem;
-  color: #5f4740;
+  color: #6d4c41;
   margin-bottom: 0.5rem;
 }
 
