@@ -20,6 +20,7 @@
     }
 
     .container {
+      max-width: 95vw;
       position: relative;
       z-index: 1;
       max-width: 1500px;
@@ -55,7 +56,7 @@
     }
 
     h2 {
-      font-size: 1.8rem;
+      font-size: 1.5vm;
       margin-top: 50px;
       margin-bottom: 10px;
       color: #7b5e52;
@@ -71,7 +72,7 @@
     }
 
     .launch-button {
-      padding: 14px 32px;
+      padding: 12px 20px;
       font-size: 1rem;
       font-weight: 600;
       background-color: #a1887f;
@@ -82,6 +83,8 @@
       font-family: 'Quicksand', sans-serif;
       transition: background-color 0.3s ease;
       margin: 20px;
+      width: 80%;
+      max-width: 300px;
     }
 
     .launch-button:hover {
@@ -90,12 +93,12 @@
 
     .font-preview {
       font-family: 'LaceLove', serif;
-      font-size: 160px;
+      font-size: 12vw;
       text-align: center;
       margin: 30px auto;
-      max-width: 80vw;
+      max-width: 90vw;
       word-wrap: break-word;
-      line-height: 0.8;
+      line-height: 1;
       padding: 10px 5px;
       padding-bottom: 40px;
       background: #F7F1ED;
@@ -109,6 +112,20 @@
       border-top: 1px dashed #d4c1b9;
       margin: 40px auto;
     }
+    @media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+  .font-preview {
+    font-size: 10vw;
+  }
+  h1 {
+    font-size: 10vw;
+  }
+  h2 {
+    font-size: 6vw;
+  }
+}
   </style>
 </head>
 
