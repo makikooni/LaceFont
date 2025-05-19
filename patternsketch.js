@@ -2,8 +2,8 @@ let currentLayer = 0;
 let maxLayers = 30;
 let animate = true;
 let frameCounter = 0;
-let hasPlayedOnce = false;
 let clearBackground = false;
+let direction = 1;
 
 let speedSlider;
 let cleanButton;
@@ -17,29 +17,24 @@ function setup() {
   angleMode(RADIANS);
 
   // Speed Slider
-  createP('Animation Speed').position(420, 10).style('color', '#fff');
+  createP('Stitch Tempo').position(30, 200).style('color', '#fff');
   speedSlider = createSlider(1, 60, 10, 1);
-  speedSlider.position(400, 50);
+  speedSlider.position(25, 240);
 
   // Clean Background Button
   cleanButton = createButton('Clean Background');
-  cleanButton.position(250, 50);
+  cleanButton.position(30, 170);
   cleanButton.mousePressed(() => {
     clearBackground = true;
   });
 
-  // Animate Checkbox
-createP('Constant?').position(560, 10).style('color', '#fff');
-  animCheckbox = createCheckbox("", false); // Start unchecked
-  animCheckbox.position(580, 50);
+  // Animate Checkbox (start checked)
+  createP('Constant Weave?').position(30, 260).style('color', '#fff');
+  animCheckbox = createCheckbox("", true); // ✅ Start checked
+  animCheckbox.position(50, 300);
   animCheckbox.style('color', '#fff');
   animCheckbox.changed(() => {
-    if (animCheckbox.checked()) {
-      currentLayer = 0;
-      frameCounter = 0;
-      animate = true;
-      hasPlayedOnce = false;
-    }
+    animate = animCheckbox.checked(); // toggles ongoing animation
   });
 }
 
@@ -59,16 +54,16 @@ function draw() {
   }
   blendMode(BLEND);
 
-  // One-time growing animation
-  if (animate && !hasPlayedOnce) {
+  // Oscillating animation logic
+  if (animate) {
     frameCounter++;
     if (frameCounter % speedSlider.value() === 0) {
-      currentLayer++;
+      currentLayer += direction;
 
       if (currentLayer >= maxLayers) {
-        animate = false;
-        hasPlayedOnce = true;
-        animCheckbox.checked(false); // Visually uncheck the box
+        direction = -1; // shrink
+      } else if (currentLayer <= 0) {
+        direction = 1; // grow
       }
     }
   }
