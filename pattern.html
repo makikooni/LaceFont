@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lace Pattern</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fdf6f0, #e6dada);
+    }
+
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .button-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    .launch-button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #a1887f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      transition: background-color 0.3s ease;
+    }
+
+    .launch-button:hover {
+      background-color: #8d6e63;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="button-container">
+    <a href="index.html">
+      <button class="launch-button">Go back</button>
+    </a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.min.js"></script>
+  <script src="patternsketch.js"></script>
+</body>
+</html>
