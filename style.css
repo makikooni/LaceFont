@@ -179,3 +179,26 @@ div {
     .launch-button:hover {
       background-color: #8d6e63;
     }
+
+    .button-container2 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 999;
+}
+
+.launch-button2 {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #a1887f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.launch-button2:hover {
+  background-color: #8d6e63;
+}

@@ -17,6 +17,31 @@
       font-family: 'Playfair Display', 'Georgia', serif;
       background: linear-gradient(135deg, #fdf6f0, #e6dada);
       text-align: center;
+      position: relative;
+    }
+
+    .top-left-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    .launch-button-top {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      background-color: #a1887f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      transition: background-color 0.3s ease;
+    }
+
+    .launch-button-top:hover {
+      background-color: #8d6e63;
     }
 
     .container {
@@ -24,27 +49,29 @@
       position: relative;
       z-index: 1;
       max-width: 1500px;
-      margin: 40px auto;
-      margin-top: 10px;
       padding: 40px;
+            margin: 30px auto 30px auto; /* pushed down due to top button */
+
       background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
       overflow: visible;
     }
 
- .container2 {
-  display: inline-block; /* Make it size to its contents */
-  padding: 20px; /* Space around the inner .container */
-  border-radius: 32px;
-  background-image:
-    radial-gradient(circle, #e6cfc4 2px, transparent 2px),
-    radial-gradient(circle, #e6cfc4 2px, transparent 2px);
-  background-size: 12px 12px;
-  background-position: 0 0, 6px 6px;
-  background-repeat: repeat;
-}
+    .container2 {
+      display: inline-block;
+      padding: 20px;
+      padding-top: 0px;
+      border-radius: 32px;
+            margin: 40px auto 40px auto; /* pushed down due to top button */
 
+      background-image:
+        radial-gradient(circle, #e6cfc4 2px, transparent 2px),
+        radial-gradient(circle, #e6cfc4 2px, transparent 2px);
+      background-size: 12px 12px;
+      background-position: 0 0, 6px 6px;
+      background-repeat: repeat;
+    }
 
     h1 {
       font-size: 3rem;
@@ -82,8 +109,7 @@
       cursor: pointer;
       font-family: 'Quicksand', sans-serif;
       transition: background-color 0.3s ease;
-      margin: 20px;
-      margin-top: 10px;
+      margin: 20px auto;
       width: 80%;
       max-width: 300px;
     }
@@ -100,8 +126,7 @@
       max-width: 90vw;
       word-wrap: break-word;
       line-height: 1;
-      padding: 10px 5px;
-      padding-bottom: 40px;
+      padding: 10px 5px 40px 5px;
       background: #F7F1ED;
       border: 2px dashed #d2b6a2;
       border-radius: 16px;
@@ -112,62 +137,62 @@
       border: none;
       border-top: 1px dashed #d4c1b9;
       margin: 20px auto;
-     margin-bottom: 20px;
     }
+
     @media (max-width: 600px) {
-  .container {
-    padding: 16px;
-  }
-  .font-preview {
-    font-size: 10vw;
-  }
-  h1 {
-    font-size: 10vw;
-  }
-  h2 {
-    font-size: 6vw;
-  }
-}
+      .container {
+        padding: 16px;
+        margin-top: 100px;
+      }
+      .font-preview {
+        font-size: 10vw;
+      }
+      h1 {
+        font-size: 10vw;
+      }
+      h2 {
+        font-size: 6vw;
+      }
+    }
   </style>
 </head>
 
 <body>
-    <div class="container2">
-  <div class="container">
-    <h1>Lace Love Font</h1>
-    <br>
-    <p>
-      Download the polished version of the original Lace Love display font in TTF format.
-    </p>
-
-    <a href="LaceLove-Regular.ttf" download>
-      <button class="launch-button">Download</button>
-    </a>
-
-    <hr />
-
-    <h2>Specimen:</h2>
-    <div class="font-preview">
-      The quick brown fox jumps over the lazy dog
-    </div>
-
-    <hr />
-
-    <h2>Glyphs:</h2>
-    <div class="font-preview">
-      1 2 3 4 5 6 7 8 9 0
-      Aa Bb Cc Dd Ee Ff Gg
-      Hh Ii Jj Kk Ll Mm Nn
-      Oo Pp Qq Rr Ss Tt Uu
-      Vv Ww Xx Yy Zz
-    </div>
-
-    <hr />
-
+  <div class="top-left-button">
     <a href="index.html">
-      <button class="launch-button">Go back</button>
+      <button class="launch-button-top">Go back</button>
     </a>
   </div>
+
+  <div class="container2">
+    <div class="container">
+      <h1>Lace Love Font</h1>
+      <p>Download the polished version of the original Lace Love display font in TTF format.</p>
+
+      <a href="LaceLove-Regular.ttf" download>
+        <button class="launch-button">Download</button>
+      </a>
+
+      <hr />
+
+      <h2>Specimen:</h2>
+      <div class="font-preview">
+        The quick brown fox jumps over the lazy dog
+      </div>
+
+      <hr />
+
+      <h2>Glyphs:</h2>
+      <div class="font-preview">
+        1 2 3 4 5 6 7 8 9 0<br>
+        Aa Bb Cc Dd Ee Ff Gg<br>
+        Hh Ii Jj Kk Ll Mm Nn<br>
+        Oo Pp Qq Rr Ss Tt Uu<br>
+        Vv Ww Xx Yy Zz
+      </div>
+
+      <hr />
+    </div>
   </div>
 </body>
 </html>
