@@ -158,7 +158,7 @@ function togglePanel() {
 
   const panelWidth = uiPanel.elt.offsetWidth || 200;
   const toggleWidth = toggleArea.elt.offsetWidth || 15;
-  const visibleTab = 5; // how much remains visible when hidden
+  const visibleTab = 20; // how much remains visible when hidden
 
   if (panelVisible) {
     uiPanel.style('transform', 'translateX(0)');
