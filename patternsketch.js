@@ -13,7 +13,7 @@ let useRainbow = false;
 let uiPanel;
 let panelVisible = false;
 let toggleArea;
-let panelTop = 70; // This will be calculated based on button height
+let panelTop = 70;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -25,15 +25,16 @@ function setup() {
   const goBackButton = document.querySelector('.button-container');
   if (goBackButton) {
     const rect = goBackButton.getBoundingClientRect();
-    panelTop = rect.bottom + 10; // 10px below button
+    panelTop = rect.bottom + 10;
   }
 
   let isMobile = windowWidth < 500;
   let panelWidth = isMobile ? 160 : 200;
   let panelPadding = isMobile ? '12px 0' : '20px 0';
   let panelHeight = isMobile ? 260 : 320;
+  let visibleTab = 20;
 
-  // Create UI Panel
+  // UI Panel
   uiPanel = createDiv();
   uiPanel.style('width', `${panelWidth}px`);
   uiPanel.style('background', '#a1887f');
@@ -44,22 +45,23 @@ function setup() {
   uiPanel.style('align-items', 'center');
   uiPanel.style('box-shadow', '2px 0 10px rgba(0,0,0,0.2)');
   uiPanel.style('transition', 'transform 0.3s ease');
-  uiPanel.style('transform', 'translateX(-180px)');
+  uiPanel.style('transform', `translateX(-${panelWidth - visibleTab}px)`);
   uiPanel.style('font-family', 'sans-serif');
   uiPanel.style('border-radius', '0 12px 12px 0');
   uiPanel.style('max-height', `${panelHeight}px`);
   uiPanel.style('overflow', 'hidden');
   uiPanel.position(0, panelTop);
 
-  // Toggle area
+  // Toggle Area
   toggleArea = createDiv();
-  toggleArea.size(15, panelHeight);
+  toggleArea.size(visibleTab, panelHeight);
   toggleArea.style('cursor', 'pointer');
-  toggleArea.style('background', 'transparent');
+  toggleArea.style('background', 'transparent'); // visible on mobile
+  toggleArea.style('border-radius', '0 8px 8px 0');
   toggleArea.mousePressed(togglePanel);
-  toggleArea.position(-5, panelTop);
+  toggleArea.position(0, panelTop);
 
-  // Clean Button
+  // Buttons and Sliders
   cleanButton = createButton('Clean Background');
   cleanButton.parent(uiPanel);
   cleanButton.style('margin', '4px 0');
@@ -67,7 +69,6 @@ function setup() {
     clearBackground = true;
   });
 
-  // Stitch Tempo Slider
   let tempoLabel = createP('Stitch Tempo');
   tempoLabel.parent(uiPanel);
   tempoLabel.style('color', '#ffffff');
@@ -77,7 +78,6 @@ function setup() {
   speedSlider.style('margin-bottom', '8px');
   speedSlider.style('width', isMobile ? '120px' : '160px');
 
-  // Animate checkbox
   let weaveLabel = createP('Constant Weave?');
   weaveLabel.parent(uiPanel);
   weaveLabel.style('color', '#ffffff');
@@ -89,7 +89,6 @@ function setup() {
     animate = animCheckbox.checked();
   });
 
-  // Rainbow checkbox
   let rainbowLabel = createP('Rainbow Hue?');
   rainbowLabel.parent(uiPanel);
   rainbowLabel.style('color', '#ffffff');
@@ -100,7 +99,6 @@ function setup() {
   hueCheckbox.changed(() => {
     useRainbow = hueCheckbox.checked();
   });
-
 }
 
 function draw() {
@@ -129,7 +127,7 @@ function draw() {
 
 function drawRadialPattern(layer) {
   push();
-  translate(width / 2 , height / 2 );
+  translate(width / 2, height / 2);
   let arms = int(map(mouseX, 0, width, 4, 100));
   let radius = layer * map(mouseY, 0, height, 20, 100);
   let r = map(mouseX + mouseY, 40, width + height, 20, 80);
@@ -157,44 +155,38 @@ function togglePanel() {
   panelVisible = !panelVisible;
 
   const panelWidth = uiPanel.elt.offsetWidth || 200;
-  const toggleWidth = toggleArea.elt.offsetWidth || 15;
-  const visibleTab = 20; // how much remains visible when hidden
+  const toggleWidth = toggleArea.elt.offsetWidth || 20;
+  const visibleTab = 20;
 
   if (panelVisible) {
     uiPanel.style('transform', 'translateX(0)');
-    toggleArea.position(panelWidth - toggleWidth + visibleTab, panelTop);
+    toggleArea.position(panelWidth - toggleWidth, panelTop);
   } else {
     uiPanel.style('transform', `translateX(-${panelWidth - visibleTab}px)`);
     toggleArea.position(0, panelTop);
   }
 }
 
-
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-setTimeout(() => {
-  const goBackButton = document.querySelector('.button-container');
-  if (goBackButton) {
-    const rect = goBackButton.getBoundingClientRect();
-    panelTop = rect.bottom + 10;
+  setTimeout(() => {
+    const goBackButton = document.querySelector('.button-container');
+    if (goBackButton) {
+      const rect = goBackButton.getBoundingClientRect();
+      panelTop = rect.bottom + 10;
 
-    uiPanel.position(0, panelTop);
-    toggleArea.position(panelVisible ? 200 : -5, panelTop);
-  }
-}, 50); // small delay to ensure layout is complete
+      const panelWidth = uiPanel.elt.offsetWidth || 200;
+      const toggleWidth = toggleArea.elt.offsetWidth || 20;
+      const visibleTab = 20;
 
+      uiPanel.position(0, panelTop);
+      toggleArea.position(panelVisible ? panelWidth - toggleWidth : 0, panelTop);
+    }
+  }, 50);
 
-  // Recalculate dynamic height
   let isMobile = windowWidth < 500;
   let panelHeight = isMobile ? 260 : 320;
-
-  // Reposition and resize UI panel
-  uiPanel.position(0, panelTop);
-  uiPanel.style('max-height', `${panelHeight}px`);
-
-  // Resize and reposition toggle area
   toggleArea.size(20, panelHeight);
-  toggleArea.position(panelVisible ? 200 : 0, panelTop);
+  uiPanel.style('max-height', `${panelHeight}px`);
 }
-
