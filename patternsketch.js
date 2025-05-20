@@ -53,11 +53,11 @@ function setup() {
 
   // Toggle area
   toggleArea = createDiv();
-  toggleArea.size(20, panelHeight);
+  toggleArea.size(15, panelHeight);
   toggleArea.style('cursor', 'pointer');
   toggleArea.style('background', 'transparent');
   toggleArea.mousePressed(togglePanel);
-  toggleArea.position(0, panelTop);
+  toggleArea.position(-5, panelTop);
 
   // Clean Button
   cleanButton = createButton('Clean Background');
@@ -155,23 +155,35 @@ function drawRadialPattern(layer) {
 
 function togglePanel() {
   panelVisible = !panelVisible;
+
+  const panelWidth = uiPanel.elt.offsetWidth || 200;
+  const toggleWidth = toggleArea.elt.offsetWidth || 15;
+  const visibleTab = 5; // how much remains visible when hidden
+
   if (panelVisible) {
     uiPanel.style('transform', 'translateX(0)');
-    toggleArea.position(200, panelTop);
+    toggleArea.position(panelWidth - toggleWidth + visibleTab, panelTop);
   } else {
-    uiPanel.style('transform', 'translateX(-180px)');
+    uiPanel.style('transform', `translateX(-${panelWidth - visibleTab}px)`);
     toggleArea.position(0, panelTop);
   }
 }
+
+
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-  // Recalculate top offset under the "Go back" button
+setTimeout(() => {
   const goBackButton = document.querySelector('.button-container');
   if (goBackButton) {
     const rect = goBackButton.getBoundingClientRect();
     panelTop = rect.bottom + 10;
+
+    uiPanel.position(0, panelTop);
+    toggleArea.position(panelVisible ? 200 : -5, panelTop);
   }
+}, 50); // small delay to ensure layout is complete
+
 
   // Recalculate dynamic height
   let isMobile = windowWidth < 500;
