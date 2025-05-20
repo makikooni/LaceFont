@@ -365,7 +365,7 @@ function createUIRow1(parent) {
   sizeSlider.input(updateTextPoints);
 
   createDiv("Weave Tempo").parent(row);
-  speedSlider = createSlider(0, 200, 0).parent(row);
+  speedSlider = createSlider(0, 500, 150).parent(row);
 
   createDiv("Left/Right").parent(row);
   xOffsetSlider = createSlider(-100, 300, 0).parent(row);
@@ -380,7 +380,7 @@ function createUIRow1(parent) {
   phaseSlider = createSlider(0, 360, 360).parent(row);
 
   createDiv("Thread Sway (L/R)").parent(row);
-  xAmpSlider = createSlider(0, 100, 0).parent(row);
+  xAmpSlider = createSlider(0, 100, 50).parent(row);
 
   createDiv("Sway Precision").parent(row);
   xAngleStepSlider = createSlider(0, 20, 2, 0.1).parent(row);
