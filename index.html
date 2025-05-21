@@ -58,11 +58,13 @@
 .swing-container {
   position: absolute;
   top: -25px;
-  pointer-events: none;
   width: fit-content;
   height: fit-content;
   z-index: 1000;
+  cursor: grab;
+  pointer-events: auto; /* change from none */
 }
+
 
 /* Position each container horizontally */
 .swing-container:nth-child(1) { left: 2%; }
@@ -82,45 +84,68 @@
   </style>
 <script>
   window.onload = () => {
+    const containers = document.querySelectorAll('.swing-container');
     const images = document.querySelectorAll('.floating-swing');
+
     let mouseX = window.innerWidth / 2;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
     });
 
-    // Per-image setup
     const imageOffsets = Array.from({ length: images.length }, (_, i) => ({
-      swingBase: 50 + i * 4,               // Swing strength per image
-      shiftBase: 50 + i * 6,               // Horizontal wiggle per image
-      phaseOffset: i * 10,                // Time phase offset for idle sway
-      swingEasing: 0.02 + i * 0.01,        // How fast each image reacts to mouse
-      currentSwing: 0                      // We'll animate toward this
+      swingBase: 50 + i * 4,
+      shiftBase: 50 + i * 6,
+      phaseOffset: i * 10,
+      swingEasing: 0.02 + i * 0.01,
+      currentSwing: 0,
+      dragOffsetX: 0,
+      dragging: false,
+      initialX: 0
     }));
+
+    // 🖱 Enable dragging
+    containers.forEach((container, i) => {
+      container.addEventListener('mousedown', (e) => {
+        imageOffsets[i].dragging = true;
+        imageOffsets[i].initialX = e.clientX - imageOffsets[i].dragOffsetX;
+        container.style.cursor = 'grabbing';
+      });
+
+      document.addEventListener('mouseup', () => {
+        imageOffsets[i].dragging = false;
+        container.style.cursor = 'grab';
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (imageOffsets[i].dragging) {
+          imageOffsets[i].dragOffsetX = e.clientX - imageOffsets[i].initialX;
+        }
+      });
+    });
 
     const animate = (time) => {
       const percentX = mouseX / window.innerWidth;
 
-      images.forEach((img, i) => {
+      containers.forEach((container, i) => {
+        const img = container.querySelector('.floating-swing');
         const t = time / 1000 + imageOffsets[i].phaseOffset;
         const offset = imageOffsets[i];
 
-        // Idle sway (adds gentle wobble always)
+        // 💤 Idle + responsive swing
         const idleSwing = Math.sin(t * 1.5) * 2;
-
-        // Mouse-based target swing
         const targetSwing = idleSwing + (percentX - 0.5) * offset.swingBase;
-
-        // Smooth transition toward target using easing factor
         offset.currentSwing += (targetSwing - offset.currentSwing) * offset.swingEasing;
-
-        // Clamp final angle
         const finalSwing = Math.max(-25, Math.min(25, offset.currentSwing));
 
-        // Subtle shift based on position (optional)
+        // 📍 Horizontal shift from mouse
         const shift = (percentX - 0.5) * offset.shiftBase;
 
+        // 🎯 Apply transform to image
         img.style.transform = `translateX(${shift}px) rotate(${finalSwing}deg)`;
+
+        // 🎯 Apply drag offset to container position
+        container.style.transform = `translateX(${offset.dragOffsetX}px)`;
       });
 
       requestAnimationFrame(animate);
@@ -129,6 +154,7 @@
     requestAnimationFrame(animate);
   };
 </script>
+
 
 
 
