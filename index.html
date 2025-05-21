@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lace Love</title>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -12,22 +16,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 120px; /* space for swing images */
       background: linear-gradient(135deg, #fdf6f0, #e6dada);
       text-align: center;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     h1 {
-
+      font-family: 'Dancing Script', cursive;
+      font-size: 5rem;
+      font-weight: 400;
       color: #6d4c41;
-      margin-bottom: 20px;
-        font-family: 'Dancing Script', cursive;
-    font-size: 5rem;
-    font-weight: 400;
-    color: #6d4c41;
-    margin: 30px 0 10px 0;
-    letter-spacing: 2px;
+      margin: 30px 0 10px 0;
+      letter-spacing: 2px;
     }
 
     p {
@@ -55,159 +59,201 @@
       background-color: #8d6e63;
     }
 
-.swing-container {
-  position: absolute;
-  top: -50px;
-  width: fit-content;
-  height: fit-content;
-  z-index: 1000;
-  cursor: grab;
-  pointer-events: auto; /* change from none */
-}
+    .swing-container {
+      position: absolute;
+      top: -50px;
+      width: fit-content;
+      height: fit-content;
+      z-index: 1000;
+      cursor: grab;
+      pointer-events: auto;
+    }
 
+    .swing-container:nth-child(1) { left: 2%; }
+    .swing-container:nth-child(2) { left: 10%; }
+    .swing-container:nth-child(3) { left: 25%; }
+    .swing-container:nth-child(4) { left: 70%; }
+    .swing-container:nth-child(5) { left: 78%; }
+    .swing-container:nth-child(6) { left: 90%; }
 
-/* Position each container horizontally */
-.swing-container:nth-child(1) { left: 2%; }
-.swing-container:nth-child(2) { left: 10%; }
-.swing-container:nth-child(3) { left: 25%; }
-.swing-container:nth-child(4) { left: 60%; }
-.swing-container:nth-child(5) { left: 75%; }
-.swing-container:nth-child(6) { left: 90%; }
+    .floating-swing {
+      transform-origin: top center;
+      transition: transform 0.1s ease-out;
+    }
 
-.floating-swing {
-  transform-origin: top center;
-  transition: transform 0.1s ease-out;
-}
+    .floating-swing.dragging {
+      outline: 3px dashed #a1887f;
+      outline-offset: 6px;
+      filter: drop-shadow(0 0 5px rgba(161, 136, 127, 0.5));
+    }
 
-.floating-swing.dragging {
-  outline: 3px dashed #a1887f;
-  outline-offset: 6px;
-  filter: drop-shadow(0 0 5px rgba(161, 136, 127, 0.5));
-}
+    /* Responsive: small width */
+    @media screen and (max-width: 800px) {
+      h1 {
+        font-size: 3rem;
+      }
 
+      p {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
 
+      .launch-button {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+      }
 
+      .floating-swing {
+        width: 18vw !important;
+      }
+    }
 
+    /* Responsive: short height */
+    @media screen and (max-height: 700px) {
+      .swing-container {
+        top: -30px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-top: 20px;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+
+      .launch-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
-<script>
-  window.onload = () => {
-    const containers = document.querySelectorAll('.swing-container');
-    const images = document.querySelectorAll('.floating-swing');
-    let mouseX = window.innerWidth / 2;
 
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-    });
+  <script>
+    window.onload = () => {
+      const containers = document.querySelectorAll('.swing-container');
+      const images = document.querySelectorAll('.floating-swing');
+      let mouseX = window.innerWidth / 2;
+      let lastMouseMoveTime = Date.now();
+let isIdle = false;
 
-    const imageOffsets = Array.from({ length: images.length }, (_, i) => ({
-      swingBase: 50 + i * 4,
-      shiftBase: 50 + i * 6,
-      phaseOffset: i * 10,
-      swingEasing: 0.02 + i * 0.01,
-      currentSwing: 0,
-      dragOffsetX: 0,
-      dragging: false,
-      initialX: 0
-    }));
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  lastMouseMoveTime = Date.now();
+});
 
-    // 🖱 Enable dragging and toggle class for outline
-    containers.forEach((container, i) => {
-      const img = container.querySelector('.floating-swing');
 
-      container.addEventListener('mousedown', (e) => {
-        imageOffsets[i].dragging = true;
-        imageOffsets[i].initialX = e.clientX - imageOffsets[i].dragOffsetX;
-        container.style.cursor = 'grabbing';
-        img.classList.add('dragging');
-      });
+const imageOffsets = Array.from({ length: images.length }, (_, i) => ({
+  swingBase: 50 + i * 4,
+  shiftBase: 50 + i * 6,
+  phaseOffset: Math.random() * 50,
+  swingEasing: 0.02 + i * 0.01,
+  swingSpeed: 1.3 + Math.random() * 5,
+  responseOffset: Math.random() * 0.1 - 0.05,
+  directionMultiplier: Math.random() < 0.5 ? 1 : -1, // temporary
+  currentSwing: 0,
+  dragOffsetX: 0,
+  dragging: false,
+  initialX: 0
+}));
 
-      document.addEventListener('mouseup', () => {
-        if (imageOffsets[i].dragging) {
-          imageOffsets[i].dragging = false;
-          container.style.cursor = 'grab';
-          container.querySelector('.floating-swing').classList.remove('dragging');
-        }
-      });
+// ✅ Ensure at least two swing in opposite direction (directionMultiplier = -1)
+const negativeIndexes = imageOffsets
+  .map((offset, i) => offset.directionMultiplier === -1 ? i : null)
+  .filter(i => i !== null);
 
-      document.addEventListener('mousemove', (e) => {
-        if (imageOffsets[i].dragging) {
-          imageOffsets[i].dragOffsetX = e.clientX - imageOffsets[i].initialX;
-        }
-      });
-    });
+if (negativeIndexes.length < 2) {
+  // Get the list of indexes not already -1
+  const candidates = imageOffsets.map((_, i) => i).filter(i => !negativeIndexes.includes(i));
 
-    const animate = (time) => {
-      const percentX = mouseX / window.innerWidth;
+  // Randomly pick 2 from the candidates
+  const toFlip = candidates.sort(() => 0.5 - Math.random()).slice(0, 2, 3 - negativeIndexes.length);
+
+  toFlip.forEach(i => {
+    imageOffsets[i].directionMultiplier = -1;
+  });
+}
+
+
+
+
+
 
       containers.forEach((container, i) => {
         const img = container.querySelector('.floating-swing');
-        const t = time / 1000 + imageOffsets[i].phaseOffset;
-        const offset = imageOffsets[i];
 
-        // 💤 Idle + responsive swing
-        const idleSwing = Math.sin(t * 1.5) * 2;
-        const targetSwing = idleSwing + (percentX - 0.5) * offset.swingBase;
-        offset.currentSwing += (targetSwing - offset.currentSwing) * offset.swingEasing;
-        const finalSwing = Math.max(-25, Math.min(25, offset.currentSwing));
+        container.addEventListener('mousedown', (e) => {
+          imageOffsets[i].dragging = true;
+          imageOffsets[i].initialX = e.clientX - imageOffsets[i].dragOffsetX;
+          container.style.cursor = 'grabbing';
+          img.classList.add('dragging');
+        });
 
-        // 📍 Horizontal shift from mouse
-        const shift = (percentX - 0.5) * offset.shiftBase;
+        document.addEventListener('mouseup', () => {
+          if (imageOffsets[i].dragging) {
+            imageOffsets[i].dragging = false;
+            container.style.cursor = 'grab';
+            container.querySelector('.floating-swing').classList.remove('dragging');
+          }
+        });
 
-        // 🎯 Apply transform to image
-        img.style.transform = `translateX(${shift}px) rotate(${finalSwing}deg)`;
-
-        // 🎯 Apply drag offset to container
-        container.style.transform = `translateX(${offset.dragOffsetX}px)`;
+        document.addEventListener('mousemove', (e) => {
+          if (imageOffsets[i].dragging) {
+            const proposed = e.clientX - imageOffsets[i].initialX;
+            const maxDrag = window.innerWidth * 0.4;
+            imageOffsets[i].dragOffsetX = Math.max(-maxDrag, Math.min(maxDrag, proposed));
+          }
+        });
       });
+
+      const animate = (time) => {
+        const percentX = mouseX / window.innerWidth;
+const now = Date.now();
+isIdle = now - lastMouseMoveTime > 1000; // idle if no movement for 1 second
+
+        containers.forEach((container, i) => {
+          const img = container.querySelector('.floating-swing');
+          const t = time / 1000 + imageOffsets[i].phaseOffset;
+          const offset = imageOffsets[i];
+
+const idleStrength = isIdle ? 4 : 2; // boost swing if idle
+const idleSwing = Math.sin(t * offset.swingSpeed) * idleStrength;
+          // Introduce subtle offset to mouse-based swing for each lace
+const swingInfluence = percentX - 0.5 + offset.responseOffset;
+const targetSwing = idleSwing + swingInfluence * offset.swingBase * offset.directionMultiplier;
+
+          offset.currentSwing += (targetSwing - offset.currentSwing) * offset.swingEasing;
+          const finalSwing = Math.max(-25, Math.min(25, offset.currentSwing));
+          const shift = (percentX - 0.5) * offset.shiftBase;
+
+          img.style.transform = `translateX(${shift}px) rotate(${finalSwing}deg)`;
+          container.style.transform = `translateX(${offset.dragOffsetX}px)`;
+        });
+
+        requestAnimationFrame(animate);
+      };
 
       requestAnimationFrame(animate);
     };
-
-    requestAnimationFrame(animate);
-  };
-</script>
-
-
-
-
-
-
-
+  </script>
 </head>
-<body>
-<div class="swing-container">
-  <img class="floating-swing" src="lace0.png" style="width: 250px;" />
-</div>
-<div class="swing-container">
-  <img class="floating-swing" src="lace1.png" style="width: 270px;" />
-</div>
-<div class="swing-container">
-  <img class="floating-swing" src="lace2.png" style="width: 130px;" />
-</div>
-<div class="swing-container">
-  <img class="floating-swing" src="lace3.png" style="width: 230px;" />
-</div>
-<div class="swing-container">
-  <img class="floating-swing" src="lace4.png" style="width: 140px;" />
-</div>
-<div class="swing-container">
-  <img class="floating-swing" src="lace4.png" style="width: 90px;" />
-</div>
 
+<body>
+  <div class="swing-container"><img class="floating-swing" src="lace0.png" style="width: 12vw;" /></div>
+  <div class="swing-container"><img class="floating-swing" src="lace1.png" style="width: 13vw;" /></div>
+  <div class="swing-container"><img class="floating-swing" src="lace2.png" style="width: 8vw;" /></div>
+  <div class="swing-container"><img class="floating-swing" src="lace3.png" style="width: 11vw;" /></div>
+  <div class="swing-container"><img class="floating-swing" src="lace4.png" style="width: 7vw;" /></div>
+  <div class="swing-container"><img class="floating-swing" src="lace4.png" style="width: 5vw;" /></div>
 
   <h1>Lace Love</h1>
   <p>
-Welcome to a digital tool inspired by the intricate logic of lace—where threads form evolving patterns through rhythm and repetition. This interactive system lets you explore how structure, movement, and type can weave together into a generative design language.  </p>
+    Welcome to a digital tool inspired by the intricate logic of lace—where threads form evolving patterns through rhythm and repetition. This interactive system lets you explore how structure, movement, and type can weave together into a generative design language.
+  </p>
 
-  <a href="fontgenerator.html">
-    <button class="launch-button">Type Generator</button>
-  </a> <br>
-  <a href="fontdownload.html">
-    <button class="launch-button">Computer Font</button>
-  </a> <br>
-    <a href="pattern.html">
-    <button class="launch-button">Pattern Play</button>
-  </a>
-
+  <a href="fontgenerator.html"><button class="launch-button">Type Generator</button></a><br>
+  <a href="fontdownload.html"><button class="launch-button">Computer Font</button></a><br>
+  <a href="pattern.html"><button class="launch-button">Pattern Play</button></a>
 </body>
 </html>
