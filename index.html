@@ -79,6 +79,8 @@
     .floating-swing {
       transform-origin: top center;
       transition: transform 0.1s ease-out;
+      user-drag: none;
+      -webkit-user-drag: none;
     }
 
     .floating-swing.dragging {
@@ -134,6 +136,12 @@
     window.onload = () => {
       const containers = document.querySelectorAll('.swing-container');
       const images = document.querySelectorAll('.floating-swing');
+      images.forEach(img => {
+  img.addEventListener('dragstart', (e) => {
+    e.preventDefault(); // 💥 stop Safari from trying to drag-download
+  });
+});
+
       let mouseX = window.innerWidth / 2;
       let lastMouseMoveTime = Date.now();
 let isIdle = false;
