@@ -54,9 +54,109 @@
     .launch-button:hover {
       background-color: #8d6e63;
     }
+
+.swing-container {
+  position: absolute;
+  top: -25px;
+  pointer-events: none;
+  width: fit-content;
+  height: fit-content;
+  z-index: 1000;
+}
+
+/* Position each container horizontally */
+.swing-container:nth-child(1) { left: 2%; }
+.swing-container:nth-child(2) { left: 10%; }
+.swing-container:nth-child(3) { left: 25%; }
+.swing-container:nth-child(4) { left: 75%; }
+.swing-container:nth-child(5) { left: 85%; }
+.swing-container:nth-child(6) { left: 95%; }
+
+.floating-swing {
+  transform-origin: top center;
+  transition: transform 0.1s ease-out;
+}
+
+
+
   </style>
+<script>
+  window.onload = () => {
+    const images = document.querySelectorAll('.floating-swing');
+    let mouseX = window.innerWidth / 2;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+    });
+
+    // Per-image setup
+    const imageOffsets = Array.from({ length: images.length }, (_, i) => ({
+      swingBase: 50 + i * 4,               // Swing strength per image
+      shiftBase: 50 + i * 6,               // Horizontal wiggle per image
+      phaseOffset: i * 10,                // Time phase offset for idle sway
+      swingEasing: 0.02 + i * 0.01,        // How fast each image reacts to mouse
+      currentSwing: 0                      // We'll animate toward this
+    }));
+
+    const animate = (time) => {
+      const percentX = mouseX / window.innerWidth;
+
+      images.forEach((img, i) => {
+        const t = time / 1000 + imageOffsets[i].phaseOffset;
+        const offset = imageOffsets[i];
+
+        // Idle sway (adds gentle wobble always)
+        const idleSwing = Math.sin(t * 1.5) * 2;
+
+        // Mouse-based target swing
+        const targetSwing = idleSwing + (percentX - 0.5) * offset.swingBase;
+
+        // Smooth transition toward target using easing factor
+        offset.currentSwing += (targetSwing - offset.currentSwing) * offset.swingEasing;
+
+        // Clamp final angle
+        const finalSwing = Math.max(-25, Math.min(25, offset.currentSwing));
+
+        // Subtle shift based on position (optional)
+        const shift = (percentX - 0.5) * offset.shiftBase;
+
+        img.style.transform = `translateX(${shift}px) rotate(${finalSwing}deg)`;
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  };
+</script>
+
+
+
+
+
+
+
 </head>
 <body>
+<div class="swing-container">
+  <img class="floating-swing" src="lace0.png" style="width: 200px;" />
+</div>
+<div class="swing-container">
+  <img class="floating-swing" src="lace1.png" style="width: 220px;" />
+</div>
+<div class="swing-container">
+  <img class="floating-swing" src="lace2.png" style="width: 80px;" />
+</div>
+<div class="swing-container">
+  <img class="floating-swing" src="lace3.png" style="width: 140px;" />
+</div>
+<div class="swing-container">
+  <img class="floating-swing" src="lace4.png" style="width: 90px;" />
+</div>
+<div class="swing-container">
+  <img class="floating-swing" src="lace4.png" style="width: 60px;" />
+</div>
+
 
   <h1>Lace Love</h1>
   <p>
